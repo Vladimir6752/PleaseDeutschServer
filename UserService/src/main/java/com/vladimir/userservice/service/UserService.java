@@ -1,6 +1,6 @@
 package com.vladimir.userservice.service;
 
-import com.vladimir.userservice.models.User;
+import com.vladimir.userservice.models.SimpleUser;
 import com.vladimir.userservice.models.UserEntity;
 import com.vladimir.userservice.repo.UserRepo;
 import com.vladimir.userservice.utils.UserValidator;
@@ -14,27 +14,25 @@ public class UserService {
     private UserRepo userRepo;
     private UserValidator userValidator;
 
-    public UserEntity saveNewUser(User user) {
-        return userRepo.save(new UserEntity(user));
+    public UserEntity saveNewUser(SimpleUser simpleUser) {
+        return userRepo.save(new UserEntity(simpleUser));
     }
 
-
-
-    public ValidationObject<UserEntity> validateUserByPassword(User user) {
-        ValidationObject<UserEntity> validation = userValidator.validateUserByPassword(user);
+    public ValidationObject<UserEntity> validateUserByPassword(SimpleUser simpleUser) {
+        ValidationObject<UserEntity> validation = userValidator.validateUserByPassword(simpleUser);
 
         if(validation.noErrors()) {
-            validation.setValue(userRepo.findByUserName(user.getUsername()));
+            validation.setValue(userRepo.findByUserName(simpleUser.getUsername()));
         }
 
         return validation;
     }
 
-    public ValidationObject<UserEntity> validateNewUser(User user) {
-        ValidationObject<UserEntity> validation = userValidator.validateNewUser(user);
+    public ValidationObject<UserEntity> validateNewUser(SimpleUser simpleUser) {
+        ValidationObject<UserEntity> validation = userValidator.validateNewUser(simpleUser);
 
         if(validation.noErrors()) {
-            validation.setValue(saveNewUser(user));
+            validation.setValue(saveNewUser(simpleUser));
         }
 
         return validation;

@@ -1,6 +1,6 @@
 package com.vladimir.userservice.controllers;
 
-import com.vladimir.userservice.models.User;
+import com.vladimir.userservice.models.SimpleUser;
 import com.vladimir.userservice.models.UserEntity;
 import com.vladimir.userservice.service.UserService;
 import com.vladimir.userservice.utils.ValidationObject;
@@ -17,29 +17,17 @@ public class AuthController {
     private UserService userService;
 
     @PostMapping("/login")
-    public ResponseEntity<ValidationObject<UserEntity>> login(@RequestBody User user) {
-        ValidationObject<UserEntity> validation = userService.validateUserByPassword(user);
+    public ResponseEntity<ValidationObject<UserEntity>> login(@RequestBody SimpleUser simpleUser) {
+        ValidationObject<UserEntity> validation = userService.validateUserByPassword(simpleUser);
 
-        return new ResponseEntity<>(validation,
-                validation.hasErrors()
-                        ?
-                        HttpStatus.FORBIDDEN
-                        :
-                        HttpStatus.OK
-        );
+        return new ResponseEntity<>(validation, validation.getStatus());
     }
 
     @PostMapping("/reg")
-    public ResponseEntity<ValidationObject<UserEntity>> registration(@RequestBody User user) {
-        ValidationObject<UserEntity> validation = userService.validateNewUser(user);
+    public ResponseEntity<ValidationObject<UserEntity>> registration(@RequestBody SimpleUser simpleUser) {
+        ValidationObject<UserEntity> validation = userService.validateNewUser(simpleUser);
 
-        return new ResponseEntity<>(validation,
-                validation.hasErrors()
-                        ?
-                        HttpStatus.FORBIDDEN
-                        :
-                        HttpStatus.OK
-        );
+        return new ResponseEntity<>(validation, validation.getStatus());
     }
 
     @GetMapping
@@ -49,8 +37,7 @@ public class AuthController {
         boolean isValid = userService.validateUserByUUID(username, uuid.replace("Bearer ", ""));
 
         return new ResponseEntity<>(
-                isValid
-                        ?
+                isValid ?
                         HttpStatus.OK
                         :
                         HttpStatus.FORBIDDEN

@@ -30,9 +30,9 @@ public class UserEntity {
     private UserRole userRole = UserRole.USER;
     private String createdDate = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
 
-    public UserEntity(User user) {
-        this.userName = user.getUsername();
-        this.userPassword = user.getPassword();
+    public UserEntity(SimpleUser simpleUser) {
+        this.userName = simpleUser.getUsername();
+        this.userPassword = simpleUser.getPassword();
     }
 
     @Id
